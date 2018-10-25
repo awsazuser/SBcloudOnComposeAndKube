@@ -1,0 +1,145 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eurekaservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: eurekaservice
+  ports:
+  - port: 8761
+    targetPort: 8761
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: eurekaservice
+spec:
+  selector:
+    matchLabels:
+      app: eurekaservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: eurekaservice
+    spec:
+      containers:
+      - name: eurekaservice
+        image: awsazuser/eurekaservice:latest
+        ports:
+        - containerPort: 8761
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jinfo
+  labels:
+    name: jinfo
+spec:
+  ports:
+  - port: 8090
+    targetPort: 8090
+  clusterIP: None
+  selector:
+    role: jinfo
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: jinfo
+spec:
+  selector:
+    matchLabels:
+      app: jinfo
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: jinfo
+    spec:
+      containers:
+      - name: eurekaservice
+        image: awsazuser/eurekaclient3:latest
+        ports:
+        - containerPort: 8090
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  labels:
+    name: mongo
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  clusterIP: None
+  selector:
+    role: mongo
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zuul
+spec:
+  type: LoadBalancer
+  selector:
+    app: zuul
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: zuul
+spec:
+  selector:
+    matchLabels:
+      app: zuul
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zuul
+    spec:
+      containers:
+      - name: zuul
+        image: awsazuser/zuul:latest
+        ports:
+        - containerPort: 8080
+

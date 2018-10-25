@@ -1,0 +1,11 @@
+server:
+  port: 8093
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaservice:8761/eureka/
+
+spring:
+  application:
+    name: rbnclient

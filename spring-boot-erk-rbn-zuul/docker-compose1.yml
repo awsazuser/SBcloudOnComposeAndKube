@@ -1,0 +1,58 @@
+version: "3"
+services:
+  eurekaservice:
+    image: eurekaservice:latest
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    hostname: eurekaservice
+    ports:
+    - "8761:8761"
+    networks:
+      - springnw
+  osinfo:
+    image: eurekaclient1:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - springnw
+  jinfo:
+    image: eurekaclient2:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - springnw
+  rbnclient:
+    image: ribbonclient:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - springnw
+  gateway:
+    image: zuul:latest
+    ports:
+      - "8080:8080"
+    deploy:
+      placement:
+        constraints: [node.role != manager]
+    networks:
+      - springnw
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8092:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - springnw
+networks:
+  springnw:

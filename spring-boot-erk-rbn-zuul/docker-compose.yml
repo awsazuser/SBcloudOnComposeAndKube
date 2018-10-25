@@ -1,0 +1,41 @@
+version: "3"
+services:
+  eurekaservice:
+    image: awsazuser/eurekaservice:latest
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    hostname: eurekaservice
+    ports:
+    - "8761:8761"
+    networks:
+      - springnw
+  jinfo:
+    image: awsazuser/eurekaclient3:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role != manager]
+    networks:
+      - springnw
+  gateway:
+    image: awsazuser/zuul:latest
+    ports:
+      - "8999:8080"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - springnw
+  mongo-0:
+    image: mongo:latest
+    hostname: mongo-0
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    ports:
+      - "27017:27017"
+    networks:
+       - springnw
+networks:
+  springnw:

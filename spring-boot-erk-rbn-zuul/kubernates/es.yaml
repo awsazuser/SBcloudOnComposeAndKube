@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eurekaservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: eurekaservice
+  ports:
+  - port: 80
+    targetPort: 8761
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: eurekaservice
+spec:
+  selector:
+    matchLabels:
+      app: eurekaservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: eurekaservice
+    spec:
+      containers:
+      - name: eurekaservice
+        image: awsazuser/eurekaservice:latest
+        ports:
+        - containerPort: 8761
+
