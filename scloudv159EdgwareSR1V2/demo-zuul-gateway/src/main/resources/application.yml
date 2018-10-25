@@ -1,0 +1,38 @@
+server:
+   port: 8080
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaservice:8761/eureka/
+
+zuul:
+  Eureka:
+  prefix: /api
+  routes:
+    osinfo:
+      path: /os/**
+      serviceId: OSINFO
+    jinfo:
+      path: /java/**
+      serviceId: JINFO
+    test:
+      path: /redirect/**
+      url: http://google.com
+    osinf:
+      path: /osi/**
+      url: http://osinfo:8092
+    jvinf:
+      path: /jvi/**
+      url: http://jinfo:8093
+    rbncl:
+      path: /rbncli/**
+      url: http://rbnclient:8091/rbncli
+
+spring:
+  application:
+    name: zuul
+
+management:
+  security:
+    enabled: false
