@@ -1,0 +1,28 @@
+server:
+  port: 8091
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaservice:8761/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+
+jinfo:
+  ribbon:
+    eureka:
+      enabled: true
+    listOfServers: jinfo:8093
+    ServerListRefreshInterval: 15000
+
+osinfo:
+  ribbon:
+    eureka:
+      enabled: true
+    listOfServers: osinfo:8092
+    ServerListRefreshInterval: 15000
+
+spring:
+  application:
+    name: rbnclient
